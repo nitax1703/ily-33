@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para ti 💜</title>
+
+  <style>
+    :root{
+      --bg1:#05000a;
+      --bg2:#12001f;
+      --neon1:#b300ff;
+      --neon2:#00e5ff;
+      --pink:#ff2bd6;
+      --white:#f6f6ff;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      overflow:hidden;
+      color:var(--white);
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1) 60%);
+    }
+
+    /* Fondo con grid gamer */
+    .grid{
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(to right, rgba(179,0,255,0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,229,255,0.10) 1px, transparent 1px);
+      background-size: 70px 70px;
+      opacity:0.6;
+      filter: blur(0.2px);
+      animation: gridMove 8s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes gridMove{
+      from{ transform: translateY(0px); }
+      to{ transform: translateY(70px); }
+    }
+
+    /* Corazones flotando */
+    .hearts{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .heart{
+      position:absolute;
+      width:22px;
+      height:22px;
+      transform: rotate(45deg);
+      opacity:0.9;
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 0 10px rgba(255,43,214,0.9));
+      border:2px solid rgba(255,43,214,0.95);
+      background: rgba(179,0,255,0.08);
+    }
+
+    .heart:before,
+    .heart:after{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:22px;
+      border:2px solid rgba(255,43,214,0.95);
+      border-radius:50%;
+      background: rgba(179,0,255,0.08);
+    }
+
+    .heart:before{
+      left:-12px;
+      top:0;
+    }
+    .heart:after{
+      top:-12px;
+      left:0;
+    }
+
+    @keyframes floatUp{
+      from{
+        transform: translateY(120vh) rotate(45deg);
+        opacity:0;
+      }
+      10%{ opacity:0.9; }
+      to{
+        transform: translateY(-30vh) rotate(45deg);
+        opacity:0;
+      }
+    }
+
+    /* Contenedor principal */
+    .wrap{
+      position:relative;
+      z-index:2;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .card{
+      width:min(900px, 95vw);
+      background: rgba(10, 0, 20, 0.55);
+      border: 2px solid rgba(179,0,255,0.35);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow:
+        0 0 25px rgba(179,0,255,0.25),
+        0 0 55px rgba(0,229,255,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .title{
+      font-size: clamp(24px, 3vw, 40px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-shadow: 0 0 18px rgba(179,0,255,0.5);
+      margin-bottom: 10px;
+    }
+
+    .subtitle{
+      opacity:0.9;
+      line-height:1.4;
+      margin-bottom: 20px;
+      font-size: clamp(14px, 1.4vw, 18px);
+    }
+
+    /* Botón Start */
+    .startBtn{
+      width: 220px;
+      height: 70px;
+      border-radius: 18px;
+      border: 2px solid rgba(0,229,255,0.8);
+      background: linear-gradient(135deg, rgba(179,0,255,0.35), rgba(0,229,255,0.12));
+      color: var(--white);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow:
+        0 0 18px rgba(0,229,255,0.22),
+        0 0 30px rgba(179,0,255,0.22);
+      animation: shake 1.2s infinite;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .startBtn:hover{
+      transform: scale(1.03);
+      box-shadow:
+        0 0 22px rgba(0,229,255,0.35),
+        0 0 45px rgba(179,0,255,0.35);
+    }
+
+    @keyframes shake{
+      0%{ transform: translate(0px,0px); }
+      10%{ transform: translate(1px,-1px); }
+      20%{ transform: translate(-1px,1px); }
+      30%{ transform: translate(2px,0px); }
+      40%{ transform: translate(-2px,0px); }
+      50%{ transform: translate(1px,1px); }
+      60%{ transform: translate(-1px,-1px); }
+      70%{ transform: translate(2px,-1px); }
+      80%{ transform: translate(-2px,1px); }
+      90%{ transform: translate(1px,0px); }
+      100%{ transform: translate(0px,0px); }
+    }
+
+    /* Pantallas */
+    .screen{
+      display:none;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .screen.active{
+      display:block;
+    }
+
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(10px); }
+      to{ opacity:1; transform: translateY(0px); }
+    }
+
+    /* Mensajes */
+    .msgBox{
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 2px solid rgba(255,43,214,0.35);
+      background: rgba(255,43,214,0.06);
+      box-shadow: 0 0 25px rgba(255,43,214,0.08);
+      min-height: 120px;
+    }
+
+    .msg{
+      font-size: clamp(16px, 1.6vw, 22px);
+      line-height: 1.5;
+      font-weight: 600;
+      text-shadow: 0 0 12px rgba(255,43,214,0.25);
+    }
+
+    .hint{
+      margin-top: 14px;
+      opacity:0.85;
+      font-size: 14px;
+    }
+
+    .controls{
+      margin-top: 18px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight:700;
+      color: var(--white);
+      background: rgba(179,0,255,0.25);
+      border: 2px solid rgba(179,0,255,0.45);
+      transition: transform 0.15s ease;
+    }
+
+    .btn:hover{ transform: scale(1.03); }
+
+    .btn2{
+      background: rgba(0,229,255,0.15);
+      border: 2px solid rgba(0,229,255,0.55);
+    }
+
+    /* Corazón grande animado */
+    .Heart{
+      margin-top: 18px;
+      width: 45px;
+      height: 45px;
+      position: relative;
+      transform: rotate(45deg);
+      margin-inline:auto;
+      border: 2px solid rgba(255,43,214,0.95);
+      background: rgba(255,43,214,0.08);
+      filter: drop-shadow(0 0 18px rgba(255,43,214,0.9));
+      animation: pulse 1.2s infinite;
+      border-radius: 8px;
+    }
+
+    .Heart:before,
+    .Heart:after{
+      content:"";
+      position:absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(255,43,214,0.95);
+      border-radius: 50%;
+      background: rgba(255,43,214,0.08);
+    }
+    .Heart:before{ left:-27px; top:0; }
+    .Heart:after{ top:-27px; left:0; }
+
+    @keyframes pulse{
+      0%{ transform: rotate(45deg) scale(1); }
+      50%{ transform: rotate(45deg) scale(1.08); }
+      100%{ transform: rotate(45deg) scale(1); }
+    }
+
+    .footer{
+      margin-top: 14px;
+      text-align:center;
+      opacity:0.85;
+      font-size: 13px;
+    }
+
+    /* Responsive */
+    @media (max-width: 520px){
+      .card{ padding: 20px; }
+      .startBtn{ width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid"></div>
+  <div class="hearts" id="hearts"></div>
+  <audio id="lofi" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/30/audio_9b7c2c5e52.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+  </audio>
+  
+  <div class="wrap">
+    <div class="card">
+
+      <!-- Pantalla 1 -->
+      <div class="screen active" id="screenStart">
+        <div class="title">💜 Para mi niño hermoso  💜</div>
+        <div class="subtitle">
+          Holaaa, cara de bola
+          <br>✨Presiona <b>START</b> ✨
+        </div>
+
+        <button class="startBtn" id="startBtn">START</button>
+
+        <div class="footer">
+          (Feliz día, te quiero)
+        </div>
+      </div>
+
+      <!-- Pantalla 2 -->
+      <div class="screen" id="screenLove">
+        <div class="title">🎮💓 Misión: Hacerte feliz 💓🎮</div>
+        <div class="subtitle">
+          Aunque hoy estemos un poquitoooo lejos... no cambia lo que siento por ti
+        </div>
+
+        <div class="Heart"></div>
+
+        <div class="msgBox">
+          <div class="msg" id="msg">
+     
+          </div>
+          <div class="hint">
+            Tip: Puedes volver a leerlos cada que me extrañes
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn2" id="nextBtn">Siguiente 💌</button>
+          <button class="btn" id="backBtn">Volver ⬅</button>
+        </div>
+
+        <div class="footer">
+          Voglio stare sempre con te <3
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Pantallas
+    const screenStart = document.getElementById("screenStart");
+    const screenLove  = document.getElementById("screenLove");
+    const startBtn    = document.getElementById("startBtn");
+    const nextBtn     = document.getElementById("nextBtn");
+    const backBtn     = document.getElementById("backBtn");
+    const msgEl       = document.getElementById("msg");
+
+    // Mensajes lindos
+    const messages = [
+      "Eres mi lugar seguro, incluso si estamos lejos. 💜",
+      "Tienes los ojos mas lindos que he visto en todo el universo. ✨",
+      "No sabía que me faltaba algo hasta que llegaste tú. :3",
+      "No importa la distancia: yo sigo eligiéndote todos los días. 💘",
+      "¿Cómo le haces para gustarme tanto? 🫶",
+      "Grrrr precioso, guapo, hermoso, fabuloso te voy a besar 💞",
+      "Nunca me cansare de ti.",
+      "Te Quiero Muchisimooooooo Kelito lindo; mi vida hermosa."
+    ];
+
+    let i = -1;
+
+    function goToLoveScreen(){
+      screenStart.classList.remove("active");
+      screenLove.classList.add("active");
+      i = -1;
+      msgEl.textContent = "(Presiona 'Siguiente' 💌)";
+    }
+
+    function goToStartScreen(){
+      screenLove.classList.remove("active");
+      screenStart.classList.add("active");
+    }
+
+    function nextMessage(){
+      i++;
+      if(i >= messages.length) i = 0;
+      msgEl.textContent = messages[i];
+    }
+
+    startBtn.addEventListener("click", () => {
+  const audio = document.getElementById("lofi");
+  audio.volume = 0.45;
+  audio.play();
+  goToLoveScreen();
+});
+    
+    
+    backBtn.addEventListener("click", goToStartScreen);
+    nextBtn.addEventListener("click", nextMessage);
+
+    // Crear corazones flotando
+    const heartsContainer = document.getElementById("hearts");
+
+    function spawnHeart(){
+      const heart = document.createElement("div");
+      heart.className = "heart";
+
+      const left = Math.random() * 100;
+      const size = 14 + Math.random() * 26;
+      const duration = 6 + Math.random() * 6;
+
+      heart.style.left = left + "vw";
+      heart.style.width = size + "px";
+      heart.style.height = size + "px";
+      heart.style.animationDuration = duration + "s";
+      heart.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+
+      heartsContainer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, duration * 1000);
+    }
+
+    // Genera corazones constantemente
+    setInterval(spawnHeart, 420);
+  </script>
+</body>
+</html>
